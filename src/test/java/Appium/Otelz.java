@@ -10,13 +10,17 @@ import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.touch.TouchActions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -68,16 +72,18 @@ public class Otelz {
         String otelFiyati=otelFiyat.getText();
         WebElement otelBtn=driver.findElement(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.ScrollView/android.widget.FrameLayout/android.widget.RelativeLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]/android.view.ViewGroup"));
         otelBtn.click();
-        Thread.sleep(2500);
+        Thread.sleep(3000);
         String actualOtelAdi=driver.findElement(By.id("com.otelz.mobil:id/tvFacilityDetailName")).getText();
         assertTrue(actualOtelAdi.contains(otelAdi));
         WebElement otelAdiWebElement=driver.findElement(By.id("com.otelz.mobil:id/tvFacilityDetailName"));
         Thread.sleep(4000);
 
-
+/*
         TouchActions actions=new TouchActions(driver);
         actions.scroll(otelAdiWebElement,10,100).perform();
         Thread.sleep(3000);
+
+ */
 
         WebElement actualOtelFiyatiWebElement =driver.findElement(By.id("com.otelz.mobil:id/tv_best_price_total_price_value"));
         String actualOtelFiyati=actualOtelFiyatiWebElement.getText();
@@ -101,6 +107,9 @@ public class Otelz {
         WebElement surnameTextBox=driver.findElement(By.id("com.otelz.mobil:id/tvPersonalInfoSurname"));
         surnameTextBox.sendKeys(faker.name().lastName());
         Thread.sleep(3000);
+        WebElement emailTextBox=driver.findElement(By.id("com.otelz.mobil:id/tvPersonalInfoMail"));
+        emailTextBox.sendKeys(faker.internet().emailAddress());
+        Thread.sleep(3000);
         WebElement phoneCode=driver.findElement(By.id("com.otelz.mobil:id/etPersonalInfoPhoneCode"));
         phoneCode.click();
         Thread.sleep(3000);
@@ -119,11 +128,39 @@ public class Otelz {
         WebElement saveInfoCheckBox = driver.findElement(By.id("com.otelz.mobil:id/checkBoxSaveInfo"));
         saveInfoCheckBox.click();
         Thread.sleep(3000);
-        WebElement nextStepBtn=driver.findElement(By.id("com.otelz.mobil:id/btnPersonalInfoNext2"));
-        nextStepBtn.click();
+
+
+        Dimension dimension = driver.manage().window().getSize();
+
+        int start_x = (int) (dimension.width * 0.5);
+        int start_y = (int) (dimension.height * 0.8);
+
+       int end_x = (int) (dimension.width * 0.5);
+        int end_y = (int) (dimension.height * 0.2);
+
+        TouchAction touchAction = new TouchAction(driver);
+
+       for (int i = 0; i < 3; i++) {
+            Thread.sleep(3000);
+           touchAction.press(PointOption.point(start_x,start_y))
+                    .moveTo(PointOption.point(end_x,end_y)).release().perform();
+       }
+
         Thread.sleep(3000);
         WebElement illumnationCheckBox = driver.findElement(By.id("com.otelz.mobil:id/checkBoxIllumination"));
         illumnationCheckBox.click();
+        Dimension dimension2 = driver.manage().window().getSize();
+
+        int start_x2 = (int) (dimension.width * 0.5);
+        int start_y2 = (int) (dimension.height * 0.9);
+
+        int end_x2 = (int) (dimension.width * 0.5);
+        int end_y2 = (int) (dimension.height * 0.1);
+        for (int i = 0; i < 5; i++) {
+            Thread.sleep(3000);
+            touchAction.press(PointOption.point(start_x2,start_y2))
+                    .moveTo(PointOption.point(end_x2,end_y2)).release().perform();
+        }
         Thread.sleep(3000);
         WebElement permissionCheckBox = driver.findElement(By.id("com.otelz.mobil:id/checkBoxPermission"));
         permissionCheckBox.click();
@@ -137,9 +174,13 @@ public class Otelz {
         WebElement kuponTextBox=driver.findElement(By.id("com.otelz.mobil.reservationSteps:id/etCouponCode"));
         kuponTextBox.sendKeys("PSD483");
         Thread.sleep(3000);
+        WebElement useBtn=driver.findElement(By.id("com.otelz.mobil.reservationSteps:id/button4"));
+        useBtn.click();
+        Thread.sleep(3000);
         WebElement messageBox=driver.findElement(By.id("android:id/message"));
         String message = messageBox.getText();
         assertTrue(message.contains("Great news!"));
+        driver.close();
     }
 }
 
